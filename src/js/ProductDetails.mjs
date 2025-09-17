@@ -8,20 +8,34 @@ export default class ProductDetails {
   }
 
   async init() {
-    // use the datasource to get the details for the current product. findProductById will return a promise! use await or .then() to process it
+    // get product details
     this.product = await this.dataSource.findProductById(this.productId);
-    // the product details are needed before rendering the HTML
+
+    // render details
     this.renderProductDetails();
-    // once the HTML is rendered, add a listener to the Add to Cart button
-    // Notice the .bind(this). This callback will not work if the bind(this) is missing. Review the readings from this week on 'this' to understand why.
+
+    // attach listener to Add to Cart button
     document
       .getElementById("addToCart")
-      .addEventListener("click", this.addToCart.bind(this));
+      .addEventListener("click", this.addProductToCart.bind(this));
   }
 
   addProductToCart() {
     let cart = getLocalStorage("so-cart") || [];
-    cart.push(this.product);
+
+    // check if product already exists in cart
+    const existing = cart.find(item => item.Id === this.product.Id);
+
+    if (existing) {
+      // increment quantity if already in cart
+      existing.quantity = (existing.quantity || 1) + 1;
+    } else {
+      // add new product with quantity 1
+      this.product.quantity = 1;
+      cart.push(this.product);
+    }
+
+    // save back to local storage
     setLocalStorage("so-cart", cart);
   }
 
