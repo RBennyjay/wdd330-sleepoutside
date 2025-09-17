@@ -261,3 +261,40 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+
+/* // added to Improve product card design with hover effects */
+
+/* Styles for product lists */
+.product-card {
+  flex: 1 1 45%;
+  margin: 0.25em;
+  padding: 0.5em;
+  border: 1px solid var(--light-grey);
+  max-width: 250px;
+  min-width: 180px;
+  /* prevents collapsing */
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+.product-card h2,
+.product-card h3,
+.product-card p {
+  margin: 0.5em 0;
+}
+
+.card__brand {
+  font-size: var(--small-font);
+}
+
+.card__name {
+  font-size: 1em;
+}
+
+/* Hover effects */
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+  border-color: var(--primary-color);
+}
