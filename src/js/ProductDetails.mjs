@@ -1,4 +1,3 @@
-// ProductDetails.mjs
 import { getLocalStorage, setLocalStorage, updateHeaderCartCount } from "./utils.mjs";
 import ShoppingCart from "./ShoppingCart.mjs";
 
@@ -7,45 +6,51 @@ export default class ProductDetails {
     this.productId = productId;
     this.product = {};
     this.dataSource = dataSource;
-    this.cartKey = "cart"; // matches ShoppingCart default
+    this.cartKey = "cart"; // matches ShoppingCart default key
   }
 
   async init() {
-    // Get product details
-    this.product = await this.dataSource.findProductById(this.productId);
+    try {
+      // Fetch product details from API
+      this.product = await this.dataSource.findProductById(this.productId);
 
-    // Render product details
-    this.renderProductDetails();
+      // Render product details
+      this.renderProductDetails();
 
-    // Attach "Add to Cart" button
-    document
-      .getElementById("addToCart")
-      .addEventListener("click", this.addProductToCart.bind(this));
+      // Attach "Add to Cart" button listener
+      document
+        .getElementById("addToCart")
+        .addEventListener("click", this.addProductToCart.bind(this));
+
+    } catch (error) {
+      console.error("Failed to load product details:", error);
+      const element = document.querySelector("#productDetails");
+      element.innerHTML = "<p>Sorry, this product could not be loaded.</p>";
+    }
   }
 
   addProductToCart() {
-    // Load cart
     const cart = getLocalStorage(this.cartKey) || [];
 
-    // Check if product already exists
+    // Check if product already exists in cart
     const existing = cart.find(item => item.Id === this.product.Id);
 
     if (existing) {
-      // Increment quantity
       existing.quantity = (existing.quantity || 1) + 1;
     } else {
-      // Add new product with quantity 1
-      const productToAdd = { ...this.product, quantity: 1 };
+      // Use PrimaryLarge for detail page or fallback to PrimaryMedium
+      const productToAdd = {
+        ...this.product,
+        Image: this.product.Images?.PrimaryLarge || this.product.Images?.PrimaryMedium || '',
+        quantity: 1
+      };
       cart.push(productToAdd);
     }
 
-    // Save cart
     setLocalStorage(this.cartKey, cart);
-
-    // Update header cart count
     updateHeaderCartCount();
 
-    // Optional: refresh checkout page if already open
+    // Refresh checkout table if open
     const checkoutTable = document.querySelector(".checkout-table");
     if (checkoutTable) {
       const shoppingCart = new ShoppingCart(this.cartKey);
@@ -65,7 +70,7 @@ export default class ProductDetails {
 
       <img 
         class="divider"
-        src="${product.Image}"
+        src="${product.Images?.PrimaryLarge || product.Images?.PrimaryMedium || ''}"
         alt="${product.NameWithoutBrand}"
       />
 

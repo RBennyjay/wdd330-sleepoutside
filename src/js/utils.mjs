@@ -31,7 +31,18 @@ export function getParam(param) {
   return urlParams.get(param);
 }
 
-// render function with optional callback
+// ===========================
+// Render list of items with a template
+// ===========================
+export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = true) {
+  if (clear) parentElement.innerHTML = "";
+  const htmlItems = list.map(template).join("");
+  parentElement.insertAdjacentHTML(position, htmlItems);
+}
+
+// ===========================
+// Render a single HTML string with optional callback
+// ===========================
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
   if (callback) callback(data);
@@ -67,7 +78,6 @@ export function updateHeaderCartCount() {
   if (cartCountSpan) {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     let count = 0;
-    // sum quantities of all items
     cart.forEach(item => count += item.quantity);
     cartCountSpan.textContent = count;
   }
