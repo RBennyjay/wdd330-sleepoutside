@@ -69,6 +69,9 @@ export async function loadHeaderFooter(callback) {
   // Update cart count after header is loaded
   updateHeaderCartCount();
 
+  // Load tent icon after header is in the DOM
+  loadTentIcon("#logo");
+
   if (callback) callback();
 }
 
@@ -82,3 +85,22 @@ export function updateHeaderCartCount() {
     cartCountSpan.textContent = count;
   }
 }
+
+// ===========================
+// Load tent icon for header
+// ===========================
+import tentIcon from "../images/noun_Tent_2517.svg";
+
+export function loadTentIcon(selector = "#logo") {
+  const el = qs(selector);
+  if (el) {
+    el.src = tentIcon; // Vite will handle the correct path in production
+  } else {
+    console.warn(`No element found for selector: ${selector}`);
+  }
+}
+
+// Automatically load tent icon when DOM is ready 
+document.addEventListener("DOMContentLoaded", () => {
+  loadTentIcon("#logo");
+});
