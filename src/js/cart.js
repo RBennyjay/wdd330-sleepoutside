@@ -1,3 +1,4 @@
+// cart.js
 import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
@@ -23,6 +24,5 @@ function cartItemTemplate(item) {
     <p class="cart-card__price">Total: $${totalPrice.toFixed(2)}</p>
   </li>`;
 }
-
 
 renderCartContents();

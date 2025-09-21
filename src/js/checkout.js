@@ -1,13 +1,6 @@
 // checkout.js
-import { loadHeaderFooter, updateHeaderCartCount, getLocalStorage, setLocalStorage } from "../utils.mjs";
+import { loadHeaderFooter, updateHeaderCartCount, getLocalStorage, setLocalStorage } from "./utils.mjs";
 import ShoppingCart from "./ShoppingCart.mjs";
-
-// document.addEventListener("DOMContentLoaded", async () => {
-//   // Load header/footer and then display cart items
-//   await loadHeaderFooter(() => {
-//     displayCartItems();
-//   });
-// });
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadHeaderFooter(() => {
