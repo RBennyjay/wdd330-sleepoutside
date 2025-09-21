@@ -11,13 +11,13 @@
 <body>
   <header id="main-header" class="divider"></header>
 
-
   <main class="divider">
     <div class="hero">
       <img src="/images/banner-sm.jpg" srcset="images/banner-sm.jpg 500w, images/banner.jpg"
-        alt="image of a high mountain lake"/>
+        alt="image of a high mountain lake" />
       <div class="logo logo--square">
-        <img src="/images/noun_Tent_2517.svg" alt="tent image for logo"/>
+        <!-- Removed src; JS will load the correct Vite path -->
+        <img id="logo" alt="tent image for logo" />
         <div>Sleep<span class="highlight">Outside</span></div>
       </div>
       <div class="mission">
@@ -27,7 +27,6 @@
         </p>
       </div>
     </div>
-  
 
     <section class="categories">
       <h2>Shop by Category</h2>
@@ -51,7 +50,6 @@
       </div>
     </section>
 
-  
   </main>
 
   <footer id="main-footer"></footer>
