@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sleep Outside | Cart</title>
 
-  <!--  Correct path -->
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
@@ -14,17 +13,27 @@
   <header id="main-header" class="divider"></header>
 
   <main class="divider">
-    <section class="products">
-      <h2>My Cart</h2>
-      <ul class="product-list"></ul>
-    </section>
+    <h1>Your Cart</h1>
+    <div id="cart-items">
+      <!-- Cart items will be rendered here by cart.mjs -->
+    </div>
+
+    <!-- <div class="cart-summary">
+      <strong>Total: $<span class="cart-total">0.00</span></strong>
+    </div> -->
+
+    <div class="cart-summary">
+      <span class="cart-summary-label">Total:</span>
+      <span class="cart-summary-price">$<span class="cart-total">0.00</span></span>
+        <div></div> <!-- column 4 empty (keep grid columns consistent) -->
+    </div>
+
   </main>
 
   <footer id="main-footer" class="divider"></footer>
 
-  <!--  Correct script paths -->
-  <script type="module" src="/js/cart.js"></script>
-  <script type="module" src="/js/main.js"></script>
+  <!-- Correct script paths -->
+  <script type="module" src="/js/cart.mjs"></script>
 </body>
 
 </html>

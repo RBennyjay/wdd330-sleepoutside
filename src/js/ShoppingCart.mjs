@@ -20,7 +20,7 @@ export default class ShoppingCart {
   mergeDuplicates() {
     const merged = [];
     this.cartItems.forEach(item => {
-      const existing = merged.find(p => p.Id === item.Id);
+      const existing = merged.find(p => p.id === item.id);
       if (existing) {
         existing.quantity += item.quantity;
       } else {
@@ -36,62 +36,53 @@ export default class ShoppingCart {
     updateHeaderCartCount();
   }
 
-  renderCart() {
-    const parent = document.querySelector(".products");
-    if (!this.cartItems || this.cartItems.length === 0) {
-      parent.innerHTML = `<p>Your cart is empty.</p>`;
-      updateHeaderCartCount();
-      return;
-    }
-
-    const html = this.cartItems.map((item, index) => this.cartItemTemplate(item, index)).join("");
-
-    const total = this.cartItems.reduce((sum, item) => sum + (item.FinalPrice * item.quantity), 0);
-
-    const fullTemplate = `
-      <table class="checkout-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${html}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3"><strong>Total</strong></td>
-            <td colspan="2"><strong>$${total.toFixed(2)}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-    `;
-
-    renderWithTemplate(fullTemplate, parent);
-
-    // Attach events
-    this.attachEvents();
+renderCart() {
+  const parent = document.querySelector("#cart-items");
+  if (!this.cartItems || this.cartItems.length === 0) {
+    parent.innerHTML = `<p>Your cart is empty.</p>`;
+    updateHeaderCartCount();
+    document.querySelector(".cart-total").textContent = "0.00";
+    return;
   }
 
-  cartItemTemplate(item, index) {
-    const itemQty = item.quantity || 1;
-    const itemPrice = item.FinalPrice || 0;
-    const itemTotal = itemPrice * itemQty;
+  const html = this.cartItems.map((item, index) => this.cartItemTemplate(item, index)).join("");
 
-    return `
-      <tr>
-        <td>${item.NameWithoutBrand}</td>
-        <td><input type="number" min="1" value="${itemQty}" data-index="${index}" class="qty-input" /></td>
-        <td>$${itemPrice.toFixed(2)}</td>
-        <td class="item-total">$${itemTotal.toFixed(2)}</td>
-        <td><button class="remove-btn" data-index="${index}">Remove</button></td>
-      </tr>
-    `;
-  }
+  parent.innerHTML = html;
+
+  const total = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  document.querySelector(".cart-total").textContent = total.toFixed(2);
+
+  this.attachEvents();
+}
+
+
+ cartItemTemplate(item, index) {
+  const itemQty = item.quantity || 1;
+  const itemPrice = item.price || 0;
+  const itemTotal = itemPrice * itemQty;
+
+  return `
+    <div class="cart-item">
+      <img src="${item.image || '/images/placeholder.png'}" alt="${item.name}" class="cart-item__image" />
+      <div class="cart-item__details">
+        <h3 class="cart-item__name">${item.name}</h3>
+        <p class="cart-item__price">$${itemPrice.toFixed(2)}</p>
+        <div class="cart-item__controls">
+          <input 
+            type="number" 
+            min="1" 
+            value="${itemQty}" 
+            data-index="${index}" 
+            class="qty-input" 
+          />
+          <span class="cart-item__subtotal">$${itemTotal.toFixed(2)}</span>
+        </div>
+      </div>
+      <button class="remove-btn" data-index="${index}">Remove</button>
+    </div>
+  `;
+}
+
 
   attachEvents() {
     const removeButtons = document.querySelectorAll(".remove-btn");
