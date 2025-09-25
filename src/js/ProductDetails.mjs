@@ -29,36 +29,36 @@ export default class ProductDetails {
     }
   }
 
- addProductToCart() {
-  const cart = getLocalStorage(this.cartKey) || [];
+  addProductToCart() {
+    const cart = getLocalStorage(this.cartKey) || [];
+    const productId = String(this.product.Id); // normalize ID
 
-  // Check if product already exists in cart (match on normalized id)
-  const existing = cart.find(item => item.id === this.product.Id);
+    // Check if product already exists in cart
+    const existing = cart.find(item => item.id === productId);
 
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    const productToAdd = {
-      id: this.product.Id,                     //  normalized
-      name: this.product.NameWithoutBrand,     //  normalized
-      price: this.product.FinalPrice,          //  normalized
-      image: this.product.Images?.PrimaryLarge || this.product.Images?.PrimaryMedium || '',
-      quantity: 1
-    };
-    cart.push(productToAdd);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      const productToAdd = {
+        id: productId,
+        name: this.product.NameWithoutBrand,
+        price: this.product.FinalPrice,
+        image: this.product.Images?.PrimaryLarge || this.product.Images?.PrimaryMedium || '',
+        quantity: 1
+      };
+      cart.push(productToAdd);
+    }
+
+    setLocalStorage(this.cartKey, cart);
+    updateHeaderCartCount();
+
+    // Refresh checkout table if open
+    const checkoutTable = document.querySelector(".checkout-table");
+    if (checkoutTable) {
+      const shoppingCart = new ShoppingCart(this.cartKey);
+      shoppingCart.init();
+    }
   }
-
-  setLocalStorage(this.cartKey, cart);
-  updateHeaderCartCount();
-
-  // Refresh checkout table if open
-  const checkoutTable = document.querySelector(".checkout-table");
-  if (checkoutTable) {
-    const shoppingCart = new ShoppingCart(this.cartKey);
-    shoppingCart.init();
-  }
-}
-
 
   renderProductDetails() {
     const element = document.querySelector("#productDetails");

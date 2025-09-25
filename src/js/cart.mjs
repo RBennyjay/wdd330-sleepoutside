@@ -4,7 +4,7 @@ import {
   setLocalStorage,
   loadHeaderFooter,
   updateCartDisplay,
-  updateHeaderCartCount, //  import this
+  updateHeaderCartCount,
 } from "./utils.mjs";
 
 function renderCartItem(item) {
@@ -40,7 +40,7 @@ function renderCartItems() {
     container.innerHTML = "<p>Your cart is empty.</p>";
     document.querySelector(".cart-total").textContent = "0.00";
     updateCartDisplay();
-    updateHeaderCartCount(); //  keep badge synced
+    updateHeaderCartCount();
     return;
   }
 
@@ -62,9 +62,13 @@ function renderCartItems() {
 function attachCartEvents() {
   const container = document.querySelector("#cart-items");
 
-  container.addEventListener("click", (e) => {
+  // Prevent duplicate listeners
+  container.replaceWith(container.cloneNode(true));
+  const freshContainer = document.querySelector("#cart-items");
+
+  freshContainer.addEventListener("click", (e) => {
     let cart = getLocalStorage("cart") || [];
-    const id = e.target.dataset.id;
+    const id = String(e.target.dataset.id); // normalize ID
 
     if (e.target.classList.contains("increase")) {
       const item = cart.find(p => p.id === id);
@@ -82,7 +86,7 @@ function attachCartEvents() {
 
     setLocalStorage("cart", cart);
     renderCartItems(); // re-render after every change
-    updateHeaderCartCount(); // make sure badge updates immediately
+    updateHeaderCartCount();
   });
 }
 

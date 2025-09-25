@@ -31,10 +31,20 @@ export default class ShoppingCart {
     setLocalStorage(this.cartKey, this.cartItems);
   }
 
-  saveCart() {
-    setLocalStorage(this.cartKey, this.cartItems);
-    updateHeaderCartCount();
-  }
+saveCart() {
+  // Normalize before saving
+  const normalized = this.cartItems.map(item => ({
+    id: item.id || item.Id,
+    name: item.name || item.NameWithoutBrand,
+    price: Number(item.price || item.FinalPrice || 0),
+    quantity: item.quantity !== undefined ? item.quantity : 1,
+    image: item.image || item.Images?.[0]?.url || "/images/placeholder.png"
+  }));
+
+  setLocalStorage(this.cartKey, normalized);
+  updateHeaderCartCount();
+}
+
 
 renderCart() {
   const parent = document.querySelector("#cart-items");
