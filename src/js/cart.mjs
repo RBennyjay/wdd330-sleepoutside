@@ -35,10 +35,19 @@ function renderCartItem(item) {
 function renderCartItems() {
   const cartItems = getLocalStorage("cart") || [];
   const container = document.querySelector("#cart-items");
+  const checkoutBtn = document.querySelector(".checkout-action a");
 
   if (!cartItems.length) {
-    container.innerHTML = "<p>Your cart is empty.</p>";
+    container.innerHTML = "<p>Your cart is empty. Add items before checkout.</p>";
     document.querySelector(".cart-total").textContent = "0.00";
+
+    // Disable checkout button
+    if (checkoutBtn) {
+      checkoutBtn.classList.add("disabled");
+      checkoutBtn.style.pointerEvents = "none";
+      checkoutBtn.style.opacity = "0.5";
+    }
+
     updateCartDisplay();
     updateHeaderCartCount();
     return;
@@ -46,6 +55,13 @@ function renderCartItems() {
 
   // Render cart items
   container.innerHTML = cartItems.map(renderCartItem).join("");
+
+  // Enable checkout button
+  if (checkoutBtn) {
+    checkoutBtn.classList.remove("disabled");
+    checkoutBtn.style.pointerEvents = "auto";
+    checkoutBtn.style.opacity = "1";
+  }
 
   // Update total
   const total = cartItems.reduce(
@@ -96,4 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCartItems();
     attachCartEvents();
   });
+
+  // Optional: redirect if cart is empty and user tries to manually access checkout
+  const checkoutUrl = "/checkout/index.html";
+  const checkoutLink = document.querySelector(".checkout-action a");
+  if (checkoutLink) {
+    checkoutLink.addEventListener("click", (e) => {
+      const cart = getLocalStorage("cart") || [];
+      if (!cart.length) {
+        e.preventDefault();
+        window.location.href = "/index.html";
+      }
+    });
+  }
 });

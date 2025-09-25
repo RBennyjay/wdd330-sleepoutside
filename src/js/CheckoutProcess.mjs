@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage, alertMessage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 export default class CheckoutProcess {
@@ -20,6 +20,10 @@ export default class CheckoutProcess {
       quantity: parseInt(item.quantity || 1, 10)
     }));
     this.calculateTotals();
+  }
+
+  getCartItems() {
+    return this.list;
   }
 
   calculateTotals() {
@@ -55,16 +59,22 @@ export default class CheckoutProcess {
     const inputs = form.querySelectorAll("input[required]");
     for (const input of inputs) {
       if (!input.value.trim()) {
-        alertMessage(`Please fill in the ${input.name} field.`, "error");
         input.focus();
-        return false;
+        return { valid: false, message: `Please fill in the ${input.name} field.` };
       }
     }
-    return true;
+    return { valid: true };
   }
 
   async checkout(form) {
-    if (!this.validateForm(form)) return;
+    if (!this.list || this.list.length === 0) {
+      throw new Error("Cart is empty. Add items before checkout.");
+    }
+
+    const validation = this.validateForm(form);
+    if (!validation.valid) {
+      throw new Error(validation.message);
+    }
 
     const formData = new FormData(form);
     const customerData = {};
@@ -83,13 +93,10 @@ export default class CheckoutProcess {
       const services = new ExternalServices();
       const result = await services.checkout(order);
 
-      // Success: show alert first
-      alertMessage("✅ Order submitted successfully!", "success");
-
       // Clear cart
       setLocalStorage(this.key, []);
 
-      // Redirect after 2 seconds so user sees the alert
+      // Redirect after 2 seconds
       setTimeout(() => {
         window.location.href = "index.html";
       }, 2000);
@@ -97,13 +104,7 @@ export default class CheckoutProcess {
       return result;
     } catch (err) {
       console.error("❌ Order submission failed:", err);
-
-      // Display server error if available
-      if (err.name === "servicesError" && err.message) {
-        alertMessage(`Checkout failed: ${JSON.stringify(err.message)}`, "error");
-      } else {
-        alertMessage("❌ There was a problem processing your order.", "error");
-      }
+      throw err; // propagate error to page script
     }
   }
 }
