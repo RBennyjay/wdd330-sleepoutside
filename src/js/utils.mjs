@@ -106,20 +106,17 @@ export function updateHeaderCartCount() {
 // ===========================
 // Cart Quantity & Price Update
 // ===========================
-
-// Update a cart item's quantity in localStorage and refresh totals
 export function updateCartItemQuantity(productId, newQuantity) {
   const cart = getLocalStorage("cart") || [];
   const item = cart.find((i) => i.id === productId);
   if (!item) return;
 
-  item.quantity = Math.max(1, newQuantity); // prevent quantity < 1
+  item.quantity = Math.max(1, newQuantity);
   setLocalStorage("cart", cart);
   updateCartDisplay();
   updateHeaderCartCount();
 }
 
-// Recalculate item totals and overall cart total
 export function updateCartDisplay() {
   const cart = getLocalStorage("cart") || [];
   let total = 0;
@@ -150,24 +147,18 @@ export function removeCartItem(productId) {
   cart = cart.filter((item) => item.id !== productId);
   setLocalStorage("cart", cart);
 
-  // Remove from DOM
   const itemRow = document.querySelector(`.cart-item[data-id="${productId}"]`);
-  if (itemRow) {
-    itemRow.remove();
-  }
+  if (itemRow) itemRow.remove();
 
   updateCartDisplay();
-  updateHeaderCartCount(); // live update
+  updateHeaderCartCount();
 }
 
-// Attach event listeners to increment/decrement/remove buttons
 export function attachQuantityListeners() {
   document.querySelectorAll(".decrement").forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.dataset.id;
-      const input = document.querySelector(
-        `.item-quantity[data-id="${productId}"]`
-      );
+      const input = document.querySelector(`.item-quantity[data-id="${productId}"]`);
       const newQuantity = parseInt(input.value) - 1;
       input.value = Math.max(1, newQuantity);
       updateCartItemQuantity(productId, newQuantity);
@@ -177,16 +168,13 @@ export function attachQuantityListeners() {
   document.querySelectorAll(".increment").forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.dataset.id;
-      const input = document.querySelector(
-        `.item-quantity[data-id="${productId}"]`
-      );
+      const input = document.querySelector(`.item-quantity[data-id="${productId}"]`);
       const newQuantity = parseInt(input.value) + 1;
       input.value = newQuantity;
       updateCartItemQuantity(productId, newQuantity);
     });
   });
 
-  // Manual input change
   document.querySelectorAll(".item-quantity").forEach((input) => {
     input.addEventListener("change", () => {
       const productId = input.dataset.id;
@@ -196,7 +184,6 @@ export function attachQuantityListeners() {
     });
   });
 
-  // Remove item button
   document.querySelectorAll(".remove-item").forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.dataset.id;
@@ -213,7 +200,7 @@ import tentIcon from "../images/noun_Tent_2517.svg";
 export function loadTentIcon(selector = "#logo") {
   const el = qs(selector);
   if (el) {
-    el.src = tentIcon; // Vite will handle the correct path in production
+    el.src = tentIcon;
   } else {
     console.warn(`No element found for selector: ${selector}`);
   }
@@ -222,3 +209,40 @@ export function loadTentIcon(selector = "#logo") {
 document.addEventListener("DOMContentLoaded", () => {
   loadTentIcon("#logo");
 });
+
+// ===========================
+// Alert / Notification
+// ===========================
+export function alertMessage(message, type = "error", scroll = true) {
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+
+  // Map type to correct CSS class
+  if (type === "success") alert.classList.add("alert-success");
+  else alert.classList.add("alert-error"); // red for errors
+
+  // Set inner HTML
+  alert.innerHTML = `
+    <span class="alert-message">${message}</span>
+    <button class="alert-close">&times;</button>
+  `;
+
+  // Close button functionality
+  alert.querySelector(".alert-close").addEventListener("click", () => {
+    alert.remove();
+  });
+
+  // Prepend to main content
+  const main = document.querySelector("main") || document.body;
+  main.prepend(alert);
+
+  // Scroll to top if needed
+  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    alert.remove();
+  }, 5000);
+
+  return alert;
+}

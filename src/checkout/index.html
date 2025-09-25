@@ -20,37 +20,42 @@
     <section class="products"></section>
 
     <section class="checkout-container">
-      <!-- Checkout Form -->
-      <form id="checkout-form" class="checkout-form">
-        <fieldset>
-          <legend>Customer Information</legend>
-          <label>First Name <input type="text" name="fname" required /></label>
-          <label>Last Name <input type="text" name="lname" required /></label>
-          <label>Street Address <input type="text" name="street" required /></label>
-          <label>City <input type="text" name="city" required /></label>
-          <label>State <input type="text" name="state" required /></label>
-          <label>Zip Code <input type="text" name="zip" required /></label>
-        </fieldset>
+      <!-- Alerts will appear here, above the form -->
+      <div class="alert-container" id="checkout-alerts"></div>
 
-        <fieldset>
-          <legend>Payment Information</legend>
-          <label>Credit Card Number <input type="text" name="cardNumber" required /></label>
-          <label>Expiration Date <input type="text" name="expiration" required /></label>
-          <label>Security Code <input type="text" name="code" required /></label>
-        </fieldset>
+      <!-- Inner wrapper for form + summary -->
+      <div class="checkout-inner">
+        <!-- Checkout Form -->
+        <form id="checkout-form" class="checkout-form">
+          <fieldset>
+            <legend>Customer Information</legend>
+            <label>First Name <input type="text" name="fname" required /></label>
+            <label>Last Name <input type="text" name="lname" required /></label>
+            <label>Street Address <input type="text" name="street" required /></label>
+            <label>City <input type="text" name="city" required /></label>
+            <label>State <input type="text" name="state" required /></label>
+            <label>Zip Code <input type="text" name="zip" required /></label>
+          </fieldset>
 
-        <button type="submit" class="btn-primary">Place Order</button>
-      </form>
+          <fieldset>
+            <legend>Payment Information</legend>
+            <label>Credit Card Number <input type="text" name="cardNumber" required /></label>
+            <label>Expiration Date <input type="text" name="expiration" required /></label>
+            <label>Security Code <input type="text" name="code" required /></label>
+          </fieldset>
 
-      <!-- Order Summary -->
-     
-      <aside id="order-summary" class="order-summary">
-        <h3>Order Summary</h3>
-        <p><span>Subtotal:</span><span id="subtotal">$0.00</span></p>
-        <p><span>Tax:</span><span id="tax">$0.00</span></p>
-        <p><span>Shipping:</span><span id="shipping">$0.00</span></p>
-        <p class="order-summary-total"><strong>Order Total:</strong><span id="orderTotal">$0.00</span></p>
-      </aside>
+          <button type="submit" class="btn-primary">Place Order</button>
+        </form>
+
+        <!-- Order Summary -->
+        <aside id="order-summary" class="order-summary">
+          <h3>Order Summary</h3>
+          <p><span>Subtotal:</span><span id="subtotal">$0.00</span></p>
+          <p><span>Tax:</span><span id="tax">$0.00</span></p>
+          <p><span>Shipping:</span><span id="shipping">$0.00</span></p>
+          <p class="order-summary-total"><strong>Order Total:</strong><span id="orderTotal">$0.00</span></p>
+        </aside>
+      </div>
     </section>
   </main>
 

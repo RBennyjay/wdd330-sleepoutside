@@ -12,16 +12,17 @@ export default class ExternalServices {
       };
 
       const response = await fetch(this.checkoutURL, options);
+      const jsonResponse = await response.json(); // parse JSON first
 
       if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Checkout failed: ${response.status} - ${text}`);
+        // throw a custom error object with server response
+        throw { name: 'servicesError', message: jsonResponse };
       }
 
-      return await response.json();
+      return jsonResponse; // happy path
     } catch (err) {
       console.error("Checkout error:", err);
-      throw err;
+      throw err; // re-throw so calling code can handle it
     }
   }
 }

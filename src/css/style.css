@@ -338,7 +338,7 @@ footer {
 
 .remove-btn {
   grid-column: 4;
-  justify-self: end;
+  justify-self: start;
   background: none;
   border: none;
   color: #c23c33;
@@ -387,28 +387,46 @@ footer {
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-width: 1080px;
 }
 
-/* Checkout Page */
+/* =========================
+   Checkout Page Layout
+   ========================= */
+
+/* Alerts on top of the form container */
 .checkout-container {
+  display: flex;
+  flex-direction: column;
+  /* stack vertically by default */
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+/* Alerts container aligns with the form on large screens */
+.checkout-inner {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  margin-top: 1.5rem;
 }
 
-.checkout-form,
-.order-summary {
-  background: #fff;
+/* Checkout form styling */
+/* .checkout-form {
+  flex: 2 1 400px;
+  border: 1px solid #ccc;
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+  background: #fff;
+} */
 
 .checkout-form {
-  flex: 1 1 400px;
-  border: 1px solid #ccc;
+  flex: 2;
+}
+
+.order-summary {
+  flex: 1;
+  margin-left: 2rem;
 }
 
 .checkout-form fieldset {
@@ -436,6 +454,7 @@ footer {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .checkout-form input:focus {
@@ -444,14 +463,15 @@ footer {
   box-shadow: 0 0 0 2px rgba(42, 122, 226, 0.2);
 }
 
+/* Order summary styling */
 .order-summary {
-  flex: 0 0 250px;
+  flex: 1 1 250px;
   border: 1px solid #ccc;
   background-color: #f8f8f8;
-  height: fit-content;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .order-summary h3 {
@@ -462,24 +482,30 @@ footer {
   padding-bottom: 0.25rem;
 }
 
-.order-summary p {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.5rem 0;
-  font-size: 1rem;
-}
-
-.order-summary strong {
-  font-size: 1.1rem;
-}
-
+.order-summary p,
 .order-summary-total {
   display: flex;
   justify-content: space-between;
-  font-weight: bold;
+  flex-wrap: wrap;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  gap: 0.5rem;
 }
 
-/* Responsive Styles */
+.order-summary p span,
+.order-summary-total span {
+  min-width: 100px;
+  text-align: right;
+}
+
+.order-summary-total {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* =========================
+   Responsive Styles
+   ========================= */
 @media (min-width: 500px) {
   body {
     max-width: 1080px;
@@ -493,6 +519,10 @@ footer {
 
 @media (min-width: 768px) {
   .checkout-container {
+    max-width: 1080px;
+  }
+
+  .checkout-inner {
     flex-direction: row;
     align-items: flex-start;
   }
@@ -504,6 +534,17 @@ footer {
   .order-summary {
     flex: 1;
     margin-left: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .checkout-inner {
+    flex-direction: column;
+  }
+
+  .checkout-form,
+  .order-summary {
+    flex: 1 1 100%;
   }
 }
 
@@ -531,35 +572,50 @@ footer {
   .category-card span {
     font-size: 0.9rem;
   }
-
-  .cart-page .cart-item {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-  }
-
-  .cart-page .cart-item-price,
-  .cart-page .remove-btn {
-    justify-self: start;
-    grid-column: 1;
-  }
-
-  .cart-page .cart-summary {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-
-  .cart-page .cart-summary-price {
-    justify-self: start;
-  }
-
-  .checkout-form legend {
-    font-size: 1.1rem;
-  }
 }
 
-@media (max-width: 400px) {
-  .cart-page .cart-card__image img {
-    width: 60px;
-    height: 60px;
+/* =======================
+   Alert / Notification
+   ======================= */
+.alert-container {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  background-color: #f0a868;
+  color: #222;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.alert.success {
+  background-color: #28a745;
+}
+
+.alert .alert-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #222;
+  line-height: 1;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

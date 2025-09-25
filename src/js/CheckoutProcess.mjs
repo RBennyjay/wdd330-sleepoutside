@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, alertMessage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 export default class CheckoutProcess {
@@ -51,12 +51,11 @@ export default class CheckoutProcess {
     }));
   }
 
-  // Minimal validation: ensure all fields have values
   validateForm(form) {
     const inputs = form.querySelectorAll("input[required]");
     for (const input of inputs) {
       if (!input.value.trim()) {
-        alert(`Please fill in the ${input.name} field.`);
+        alertMessage(`Please fill in the ${input.name} field.`, "error");
         input.focus();
         return false;
       }
@@ -83,12 +82,28 @@ export default class CheckoutProcess {
     try {
       const services = new ExternalServices();
       const result = await services.checkout(order);
-      console.log("✅ Order submitted successfully:", result);
-      alert("Order submitted successfully!");
+
+      // Success: show alert first
+      alertMessage("✅ Order submitted successfully!", "success");
+
+      // Clear cart
+      setLocalStorage(this.key, []);
+
+      // Redirect after 2 seconds so user sees the alert
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+
       return result;
     } catch (err) {
       console.error("❌ Order submission failed:", err);
-      alert("There was a problem processing your order.");
+
+      // Display server error if available
+      if (err.name === "servicesError" && err.message) {
+        alertMessage(`Checkout failed: ${JSON.stringify(err.message)}`, "error");
+      } else {
+        alertMessage("❌ There was a problem processing your order.", "error");
+      }
     }
   }
 }
